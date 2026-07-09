@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control N°1: Derivadas — Resolución</title>
+<title>Guía de Álgebra — Resolución detallada</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -23,12 +24,8 @@
     --accent-light: #e8f0f8;
     --success: #1a6b3a;
     --success-light: #e8f5ee;
-    --danger: #8a1a1a;
-    --danger-light: #f5e8e8;
     --warn: #7a5a00;
     --warn-light: #fdf5dc;
-    --step-active: #fffef8;
-    --step-prev: #f5f3ee;
     --shadow: 0 2px 12px rgba(0,0,0,0.08);
     --font-body: 'EB Garamond', Georgia, serif;
     --font-mono: 'JetBrains Mono', monospace;
@@ -41,13 +38,10 @@
     font-size: 17px;
     line-height: 1.65;
     min-height: 100vh;
-    padding: 2rem 1rem 4rem;
+    padding: 0 0 4rem;
   }
 
-  .page {
-    max-width: 760px;
-    margin: 0 auto;
-  }
+  .page { max-width: 800px; margin: 0 auto; padding: 0 1.2rem; }
 
   /* ── HEADER ── */
   .doc-header {
@@ -58,423 +52,282 @@
     color: var(--text-muted);
     letter-spacing: 0.04em;
     font-family: var(--font-mono);
-    padding-bottom: 10px;
+    padding: 1.4rem 0 10px;
     border-bottom: 1px solid var(--border);
     margin-bottom: 0.5rem;
   }
 
   .doc-title {
     text-align: center;
-    font-size: 26px;
+    font-size: 27px;
     font-weight: 500;
     letter-spacing: -0.02em;
     padding: 1.2rem 0 1rem;
     border-bottom: 2px solid var(--text);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
   }
-
   .doc-title span {
     font-size: 14px;
     font-family: var(--font-mono);
     color: var(--accent);
     display: block;
-    margin-top: 4px;
+    margin-top: 6px;
     font-weight: 400;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.03em;
   }
 
-  /* ── TABS ── */
-  .tab-row {
-    display: flex;
-    gap: 0;
+  .doc-note {
+    background: var(--warn-light);
+    border: 1px solid #e9dfae;
+    border-left: 3px solid var(--warn);
+    border-radius: 4px;
+    padding: 12px 16px;
+    font-size: 15px;
+    color: #4a3a00;
     margin-bottom: 2rem;
-    border-bottom: 1.5px solid var(--border);
   }
+  .doc-note b { color: var(--warn); }
 
-  .tab {
-    background: transparent;
-    border: none;
-    border-bottom: 2.5px solid transparent;
-    margin-bottom: -1.5px;
-    padding: 8px 18px;
+  /* ── NAV ── */
+  .nav-wrap {
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 20;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+  .nav-scroll {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+  .nav-pill {
+    flex: none;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: var(--text-muted);
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 12px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background .12s, color .12s, border-color .12s;
+  }
+  .nav-pill:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-light); }
+
+  /* ── SECTION / PART LABELS ── */
+  .part-label {
     font-family: var(--font-mono);
     font-size: 12px;
-    cursor: pointer;
-    color: var(--text-muted);
-    letter-spacing: 0.03em;
-    transition: color 0.15s, border-color 0.15s;
-  }
-
-  .tab:hover { color: var(--text); }
-
-  .tab.active {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--accent);
-    border-bottom-color: var(--accent);
+    margin: 2.6rem 0 0.6rem;
   }
 
-  /* ── PROBLEM PANEL ── */
-  .problem-panel { display: none; }
-  .problem-panel.active { display: block; }
+  .exercise {
+    scroll-margin-top: 62px;
+    margin-bottom: 2.4rem;
+  }
 
-  .problem-title {
+  .exercise-title {
     font-size: 20px;
     font-weight: 500;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
   }
-
-  .pts-total {
+  .exercise-title .tag {
     font-family: var(--font-mono);
-    font-size: 12px;
+    font-size: 11px;
     color: var(--accent);
     background: var(--accent-light);
     padding: 2px 8px;
     border-radius: 3px;
-    margin-left: 8px;
-    vertical-align: middle;
   }
 
-  .problem-desc {
-    font-size: 15px;
+  .exercise-statement {
+    font-size: 16px;
     color: var(--text-muted);
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
     line-height: 1.6;
   }
 
-  /* ── DEV BOX ── */
-  .dev-box {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--paper);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-  }
-
-  .dev-label {
+  .sub-label {
     font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-muted);
-    background: var(--bg);
-    border-bottom: 1px solid var(--border-light);
-    padding: 7px 16px;
-    letter-spacing: 0.05em;
-  }
-
-  /* ── CONTROLS ── */
-  .controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border-light);
-    background: var(--paper);
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 14px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    background: var(--paper);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    cursor: pointer;
+    font-size: 13px;
     color: var(--text);
-    transition: background 0.12s, border-color 0.12s;
-    white-space: nowrap;
-  }
-
-  .btn:hover { background: var(--bg); border-color: var(--text-muted); }
-  .btn:active { transform: scale(0.97); }
-
-  .btn.play-btn {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-  }
-  .btn.play-btn:hover { background: #163f70; }
-
-  .btn.nav-btn { padding: 6px 10px; }
-
-  .progress-wrap {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 120px;
-  }
-
-  .progress-bar {
-    flex: 1;
-    height: 3px;
     background: var(--border-light);
-    border-radius: 2px;
-    overflow: hidden;
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 3px;
+    margin: 1.1rem 0 0.6rem;
   }
 
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: width 0.3s ease;
-  }
-
-  .step-counter {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--text-faint);
-    min-width: 42px;
-    text-align: right;
-  }
-
-  /* ── STEPS ── */
-  .steps-container {
-    padding: 0 16px 16px;
-    min-height: 220px;
-  }
+  /* ── STEP BOXES ── */
+  .steps { border: 1px solid var(--border); border-radius: 6px; background: var(--paper); box-shadow: var(--shadow); overflow: hidden; }
 
   .step {
-    display: none;
-    padding: 14px 16px;
-    border-radius: 5px;
-    margin-top: 10px;
-    border-left: 3px solid transparent;
+    border-bottom: 1px solid var(--border-light);
   }
+  .step:last-child { border-bottom: none; }
 
-  .step.prev {
-    display: block;
-    background: var(--step-prev);
-    border-left-color: var(--border);
-    opacity: 0.6;
-  }
-
-  .step.active {
-    display: block;
-    background: var(--step-active);
-    border-left-color: var(--accent);
-    animation: stepIn 0.22s ease;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-  }
-
-  @keyframes stepIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .step-label {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--accent);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .step-content {
-    font-size: 16px;
-    line-height: 1.75;
-    color: var(--text);
-  }
-
-  /* ── BADGES ── */
-  .badge {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    padding: 2px 7px;
-    border-radius: 3px;
-    font-weight: 500;
-    text-transform: none;
-    letter-spacing: 0;
-  }
-  .badge-pts   { background: var(--accent-light);   color: var(--accent); }
-  .badge-ok    { background: var(--success-light);  color: var(--success); }
-  .badge-warn  { background: var(--warn-light);     color: var(--warn); }
-
-  /* ── RESULT BOXES ── */
-  .result-box {
-    margin-top: 10px;
-    padding: 10px 14px;
-    border-left: 3px solid var(--accent);
-    background: var(--accent-light);
-    border-radius: 0 4px 4px 0;
-    font-size: 15px;
-  }
-  .result-box.success {
-    border-left-color: var(--success);
-    background: var(--success-light);
-  }
-  .result-box.danger {
-    border-left-color: var(--danger);
-    background: var(--danger-light);
-  }
-  .result-box.warn {
-    border-left-color: var(--warn);
-    background: var(--warn-light);
-  }
-
-  .math-block { margin: 8px 0; overflow-x: auto; }
-  .math-inline { display: inline; }
-
-  /* KaTeX overrides */
-  .katex { font-size: 1em; }
-  .katex-display { margin: 6px 0; }
-
-  /* ── REFUERZO ── */
-  .refuerzo-section {
-    margin-top: 0;
-    padding-top: 0;
-  }
-
-  .refuerzo-title {
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.3rem;
-  }
-
-  .refuerzo-subtitle {
-    font-size: 14px;
-    font-family: var(--font-mono);
-    color: var(--text-muted);
-    letter-spacing: 0.04em;
-    margin-bottom: 2rem;
-  }
-
-  .ref-card {
-    background: var(--paper);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    box-shadow: var(--shadow);
-    margin-bottom: 1.4rem;
-    overflow: hidden;
-  }
-
-  .ref-card-header {
+  .step-head {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 11px 16px;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border-light);
+    padding: 10px 16px;
     cursor: pointer;
     user-select: none;
-  }
-
-  .ref-card-header:hover { background: var(--border-light); }
-
-  .ref-card-icon {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--accent);
-    background: var(--accent-light);
-    padding: 2px 8px;
-    border-radius: 3px;
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-  }
-
-  .ref-card-title {
-    font-size: 15px;
-    font-weight: 500;
-    flex: 1;
-  }
-
-  .ref-chevron {
-    font-size: 12px;
-    color: var(--text-faint);
-    transition: transform 0.2s;
-    font-family: var(--font-mono);
-  }
-
-  .ref-card.open .ref-chevron { transform: rotate(180deg); }
-
-  .ref-card-body {
-    display: none;
-    padding: 16px 20px 20px;
-  }
-
-  .ref-card.open .ref-card-body { display: block; }
-
-  .ref-def {
-    font-size: 15px;
-    line-height: 1.8;
-    color: var(--text);
-    margin-bottom: 10px;
-  }
-
-  .ref-math { margin: 10px 0; overflow-x: auto; }
-  .ref-math-inline { display: inline; }
-
-  .ref-reading {
-    margin-top: 12px;
-    padding: 10px 14px;
-    border-left: 3px solid var(--warn);
-    background: var(--warn-light);
-    border-radius: 0 4px 4px 0;
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--text);
-  }
-
-  .ref-reading strong { color: var(--warn); }
-
-  .ref-note {
-    margin-top: 10px;
-    font-size: 14px;
-    color: var(--text-muted);
-    font-style: italic;
-    line-height: 1.6;
-  }
-
-  .ref-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-    margin-top: 10px;
-  }
-
-  .ref-table th {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.05em;
-    color: var(--text-muted);
-    text-align: left;
-    padding: 6px 10px;
-    border-bottom: 1px solid var(--border);
     background: var(--bg);
-    font-weight: 400;
+    transition: background .12s;
+  }
+  .step-head:hover { background: var(--accent-light); }
+
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #fff;
+    background: var(--accent);
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    flex: none;
   }
 
-  .ref-table td {
-    padding: 9px 10px;
-    border-bottom: 1px solid var(--border-light);
-    vertical-align: middle;
-    line-height: 1.5;
-  }
+  .step-title { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .01em; color: var(--text); flex: 1; }
 
-  .ref-table tr:last-child td { border-bottom: none; }
-  .ref-table tr:hover td { background: var(--bg); }
-
-  .ref-table .col-fn { width: 38%; }
-  .ref-table .col-der { width: 35%; }
-  .ref-table .col-note { width: 27%; color: var(--text-muted); font-size: 13px; font-style: italic; }
-
-  /* ── FOOTER ── */
-  .doc-footer {
-    margin-top: 3rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
+  .chevron {
     font-family: var(--font-mono);
     font-size: 11px;
     color: var(--text-faint);
+    transition: transform .18s;
+  }
+  .step.open .chevron { transform: rotate(90deg); }
+
+  .step-body {
+    display: none;
+    padding: 14px 18px 16px 46px;
+    font-size: 16px;
+    background: var(--step-active, #fffef8);
+  }
+  .step.open .step-body { display: block; }
+
+  .step-body p { margin-bottom: 0.6rem; }
+  .step-body p:last-child { margin-bottom: 0; }
+
+  /* ── ANSWER BOX ── */
+  .respuesta {
+    background: var(--success-light);
+    border: 1px solid var(--success);
+    border-radius: 6px;
+    padding: 12px 18px;
+    margin-top: 10px;
+    font-size: 16.5px;
+  }
+  .respuesta .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--success);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* ── DEFINITION BOX ── */
+  .defin {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 12px 18px;
+    margin-bottom: 1rem;
+    font-size: 16px;
+  }
+  .defin b { color: var(--accent); }
+
+  /* ── SIGN TABLE ── */
+  table.signs {
+    border-collapse: collapse;
+    margin: 10px auto;
+    font-size: 15.5px;
+    width: 100%;
+    max-width: 480px;
+  }
+  table.signs th, table.signs td {
+    border: 1px solid var(--border);
+    padding: 6px 10px;
     text-align: center;
-    letter-spacing: 0.04em;
+  }
+  table.signs th { background: var(--bg); font-weight: 500; }
+
+  .expand-all {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
+  .expand-all button {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+  }
+  .expand-all button:hover { color: var(--accent); border-color: var(--accent); }
+
+  .doc-footer {
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-top: 3rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .katex { font-size: 1.02em; }
+
+  /* ── BOTÓN DE REPRODUCCIÓN POR PROBLEMA ── */
+  .play-problem-btn {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1;
+    border: 1px solid var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+    border-radius: 999px;
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: auto;
+    flex: none;
+    transition: background .12s, color .12s;
+  }
+  .play-problem-btn:hover { background: var(--accent); color: #fff; }
+  .play-problem-btn.is-playing { background: var(--accent); color: #fff; }
+
+  .step.playing-current .step-head {
+    background: var(--accent-light);
+    box-shadow: inset 3px 0 0 var(--accent);
+  }
+
+  @media (max-width: 480px) {
+    body { font-size: 16px; }
+    .doc-title { font-size: 22px; }
+    .step-body { padding-left: 40px; }
   }
 </style>
 </head>
@@ -482,808 +335,681 @@
 <div class="page">
 
   <div class="doc-header">
-    <span>Complemento Matemático</span>
-    <span>Prof. Bastiani Calabrano Inostroza</span>
+    <span>ÁLGEBRA · GUÍA RESUELTA</span>
+    <span id="clock-label">14 EJERCICIOS</span>
   </div>
 
   <div class="doc-title">
-    Control N°1: Derivadas — Resolución Paso a Paso
-    <span>Simulador de resolución interactivo · Usa Play o las flechas para navegar</span>
+    Guía de Álgebra — Resolución detallada
+    <span>Ecuaciones cuadráticas · inecuaciones · dominio y recorrido · polinomios · exponenciales y logaritmos</span>
   </div>
 
-  <div class="tab-row">
-    <button class="tab active" onclick="showProblem(0,this)">Problema 01 (20 pts)</button>
-    <button class="tab" onclick="showProblem(1,this)">Problema 02 (30 pts)</button>
-    <button class="tab" onclick="showProblem(2,this)">Problema 03 (20 pts)</button>
-    <button class="tab" onclick="showProblem(3,this)">Problema 04 (30 pts)</button>
-    <button class="tab" onclick="showProblem(4,this)">Propiedades de derivación</button>
+  <div class="doc-note">
+    <b>Nota sobre las ecuaciones cuadráticas de parámetro.</b> En todos los ejercicios de raíces iguales se sigue el mismo método: (0) escribir la ecuación como \(ax^2+bx+c=0\) e identificar \(a,b,c\); (1) imponer discriminante nulo, \(\Delta=b^2-4ac=0\), porque dos raíces reales e iguales equivalen a esa condición; (2) reemplazar y desarrollar paso a paso; (3) resolver la ecuación resultante en el parámetro.
   </div>
 
-  <!-- ═══════════════ PROBLEMA 01 ═══════════════ -->
-  <div class="problem-panel active" id="panel-0">
-    <div class="problem-title">Problema 01 <span class="pts-total">20 pts</span></div>
-    <div class="problem-desc">
-      Sea <span id="p1-head"></span>. Calcule la tercera derivada <span id="p1-head2"></span>.
-    </div>
-    <div class="dev-box">
-      <div class="dev-label">DESARROLLO — Se recomienda etiquetar pasos relevantes</div>
-      <div class="controls">
-        <button class="btn play-btn" id="btn-play-1" onclick="togglePlay(1)">▶ Play</button>
-        <button class="btn nav-btn" onclick="stepBack(1)" title="Paso anterior">←</button>
-        <button class="btn nav-btn" onclick="stepFwd(1)"  title="Siguiente paso">→</button>
-        <div class="progress-wrap">
-          <div class="progress-bar"><div class="progress-fill" id="prog-1" style="width:0%"></div></div>
-          <div class="step-counter" id="counter-1">0 / 7</div>
-        </div>
-      </div>
-      <div class="steps-container" id="steps-1">
-
-        <div class="step" id="s1-0">
-          <div class="step-label">Simplificar la función <span class="badge badge-pts">+2 pts</span></div>
-          <div class="step-content">
-            Notamos que el argumento del seno puede simplificarse:
-            <div class="math-block" id="m1-s0a"></div>
-            Por lo tanto la función queda como composición de seno y exponencial de base 4.
-            Aplicaremos la <strong>regla de la cadena</strong> en cada derivada.
-          </div>
-        </div>
-
-        <div class="step" id="s1-1">
-          <div class="step-label">Primera derivada f'(x) <span class="badge badge-pts">+6 pts</span></div>
-          <div class="step-content">
-            Regla de la cadena: <span id="m1-s1a" class="math-inline"></span>.
-            La derivada de <span id="m1-s1b" class="math-inline"></span> es <span id="m1-s1c" class="math-inline"></span>. Entonces:
-            <div class="math-block" id="m1-s1d"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s1-2">
-          <div class="step-label">Segunda derivada f''(x) — regla del producto <span class="badge badge-pts">+6 pts</span></div>
-          <div class="step-content">
-            Escribimos <span id="m1-s2a" class="math-inline"></span>.
-            Aplicamos <span id="m1-s2b" class="math-inline"></span>:
-            <div class="math-block" id="m1-s2c"></div>
-            Calculamos cada derivada interna:
-            <div class="math-block" id="m1-s2d"></div>
-            <div class="math-block" id="m1-s2e"></div>
-            Sustituyendo:
-            <div class="math-block" id="m1-s2f"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s1-3">
-          <div class="step-label">Factorizar f''(x) <span class="badge badge-pts">+2 pts</span></div>
-          <div class="step-content">
-            Sacamos el factor común <span id="m1-s3a" class="math-inline"></span>:
-            <div class="math-block" id="m1-s3b"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s1-4">
-          <div class="step-label">Plantear la tercera derivada f'''(x) <span class="badge badge-warn">+4 pts</span></div>
-          <div class="step-content">
-            Derivamos <span id="m1-s4a" class="math-inline"></span>.
-            Usamos nuevamente producto <span id="m1-s4b" class="math-inline"></span>:
-            <div class="math-block" id="m1-s4c"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s1-5">
-          <div class="step-label">Calcular las derivadas internas</div>
-          <div class="step-content">
-            Derivada del primer factor:
-            <div class="math-block" id="m1-s5a"></div>
-            Derivada del segundo factor (dos términos, regla del producto + cadena):
-            <div class="math-block" id="m1-s5b"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s1-6">
-          <div class="step-label">Resultado final f'''(x) <span class="badge badge-ok">✓ 20 / 20 pts</span></div>
-          <div class="step-content">
-            Sustituyendo y factorizando el factor común <span id="m1-s6a" class="math-inline"></span>:
-            <div class="result-box">
-              <div class="math-block" id="m1-s6b"></div>
-            </div>
-          </div>
-        </div>
-
-      </div>
+  <div class="nav-wrap">
+    <div class="nav-scroll" id="nav-scroll">
+      <a class="nav-pill" href="#ej1">Ej. 1</a>
+      <a class="nav-pill" href="#ej2">Ej. 2</a>
+      <a class="nav-pill" href="#ej3">Ej. 3</a>
+      <a class="nav-pill" href="#ej4">Ej. 4</a>
+      <a class="nav-pill" href="#ej5">Ej. 5</a>
+      <a class="nav-pill" href="#ej6">Ej. 6</a>
+      <a class="nav-pill" href="#ej7">Ej. 7</a>
+      <a class="nav-pill" href="#ej8">Ej. 8</a>
+      <a class="nav-pill" href="#p2ej1">2ª-1</a>
+      <a class="nav-pill" href="#p2ej2">2ª-2</a>
+      <a class="nav-pill" href="#p2ej3">2ª-3</a>
+      <a class="nav-pill" href="#p2ej4">2ª-4</a>
+      <a class="nav-pill" href="#p3ej5">3ª-5</a>
+      <a class="nav-pill" href="#p3ej6">3ª-6</a>
     </div>
   </div>
 
-  <!-- ═══════════════ PROBLEMA 02 ═══════════════ -->
-  <div class="problem-panel" id="panel-1">
-    <div class="problem-title">Problema 02 <span class="pts-total">30 pts</span></div>
-    <div class="problem-desc">
-      Sea <span id="p2-head"></span>. (1) Pendiente de la tangente en (0, f(0)) — 20 pts.
-      (2) Ecuación de la recta tangente — 6 pts. (3) Ecuación de la recta normal — 4 pts.
+  <!-- ============ EJERCICIO 1 ============ -->
+  <div class="part-label">Primera parte</div>
+  <div class="exercise" id="ej1">
+    <div class="exercise-title">Ejercicio 1 <span class="tag">raíces iguales</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+    <div class="exercise-statement">Determinar todos los valores de \(d\) de modo que \(x^2+(d-6)x+d^2=0\) tenga dos raíces iguales.</div>
+
+    <div class="expand-all"><button onclick="toggleAll('ej1', this)">Expandir todo</button></div>
+    <div class="steps" id="steps-ej1">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-num">0</div>
+          <div class="step-title">Forma general e identificación</div>
+          <div class="chevron">›</div>
+        </div>
+        <div class="step-body">
+          <p>La ecuación ya está en la forma \(ax^2+bx+c=0\):</p>
+          <p>\[a=1,\qquad b=(d-6),\qquad c=d^2\]</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-num">1</div>
+          <div class="step-title">Relación con el discriminante</div>
+          <div class="chevron">›</div>
+        </div>
+        <div class="step-body">
+          <p>Dos raíces reales e iguales \(\iff\) discriminante nulo:</p>
+          <p>\[\Delta=b^2-4ac=0\]</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-num">2</div>
+          <div class="step-title">Aplicar la fórmula y desarrollar</div>
+          <div class="chevron">›</div>
+        </div>
+        <div class="step-body">
+          <p>\[\Delta=(d-6)^2-4(1)(d^2)=0\]</p>
+          <p>\[(d^2-12d+36)-4d^2=0\]</p>
+          <p>\[-3d^2-12d+36=0 \;\Longrightarrow\; d^2+4d-12=0\]</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)">
+          <div class="step-num">3</div>
+          <div class="step-title">Resolver la ecuación en el parámetro</div>
+          <div class="chevron">›</div>
+        </div>
+        <div class="step-body">
+          <p>\(d^2+4d-12=0\) es otra vez cuadrática en \(d\), con \(a'=1,\;b'=4,\;c'=-12\):</p>
+          <p>\[d=\frac{-b'\pm\sqrt{(b')^2-4a'c'}}{2a'}=\frac{-(4)\pm\sqrt{(4)^2-4(1)(-12)}}{2(1)}=\frac{-4\pm\sqrt{64}}{2}=\frac{-4\pm 8}{2}\]</p>
+        </div>
+      </div>
     </div>
-    <div class="dev-box">
-      <div class="dev-label">DESARROLLO — Se recomienda derivar de forma metódica para no cometer errores</div>
-      <div class="controls">
-        <button class="btn play-btn" id="btn-play-2" onclick="togglePlay(2)">▶ Play</button>
-        <button class="btn nav-btn" onclick="stepBack(2)">←</button>
-        <button class="btn nav-btn" onclick="stepFwd(2)">→</button>
-        <div class="progress-wrap">
-          <div class="progress-bar"><div class="progress-fill" id="prog-2" style="width:0%"></div></div>
-          <div class="step-counter" id="counter-2">0 / 7</div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(d_1=2\) &nbsp;y&nbsp; \(d_2=-6\)</div>
+  </div>
+
+  <!-- ============ EJERCICIO 2 ============ -->
+  <div class="exercise" id="ej2">
+    <div class="exercise-title">Ejercicio 2 <span class="tag">raíces iguales</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+    <div class="exercise-statement">Determinar todos los valores de \(d\) de modo que \(4x^2+4(d+1)x+(d+3)^2=0\) tenga dos raíces iguales.</div>
+
+    <div class="expand-all"><button onclick="toggleAll('ej2', this)">Expandir todo</button></div>
+    <div class="steps" id="steps-ej2">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">0</div><div class="step-title">Forma general e identificación</div><div class="chevron">›</div></div>
+        <div class="step-body"><p>\[a=4,\qquad b=4(d+1),\qquad c=(d+3)^2\]</p></div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Relación con el discriminante</div><div class="chevron">›</div></div>
+        <div class="step-body"><p>Raíces iguales \(\iff \Delta=b^2-4ac=0\).</p></div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Aplicar la fórmula y calcular</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\[\Delta=\big(4(d+1)\big)^2-4(4)\big((d+3)^2\big)=0\]</p>
+          <p>\[16(d+1)^2-16(d+3)^2=0 \;\Longrightarrow\; 16\big[(d+1)^2-(d+3)^2\big]=0\]</p>
+          <p>Desarrollando los cuadrados:</p>
+          <p>\[(d^2+2d+1)-(d^2+6d+9)=0 \;\Longrightarrow\; -4d-8=0\]</p>
         </div>
       </div>
-      <div class="steps-container" id="steps-2">
-
-        <div class="step" id="s2-0">
-          <div class="step-label">Evaluar f(0) <span class="badge badge-pts">+2 pts</span></div>
-          <div class="step-content">
-            La función es <span id="m2-s0a" class="math-inline"></span>. Evaluamos en x = 0:
-            <div class="math-block" id="m2-s0b"></div>
-            El punto de tangencia es (0, −1).
-          </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">3</div><div class="step-title">Resolver la ecuación en el parámetro</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\(-4d-8=0\) es lineal en \(d\), forma \(md+n=0\) con \(m=-4,\;n=-8\):</p>
+          <p>\[d=\frac{-n}{m}=\frac{-(-8)}{(-4)}=\frac{8}{-4}=-2\]</p>
         </div>
-
-        <div class="step" id="s2-1">
-          <div class="step-label">Plantear la regla del cociente <span class="badge badge-pts">+5 pts</span></div>
-          <div class="step-content">
-            La regla del cociente establece:
-            <div class="math-block" id="m2-s1a"></div>
-            Identificamos <span id="m2-s1b" class="math-inline"></span> y <span id="m2-s1c" class="math-inline"></span>.
-          </div>
-        </div>
-
-        <div class="step" id="s2-2">
-          <div class="step-label">Calcular u' y v' <span class="badge badge-pts">+5 pts</span></div>
-          <div class="step-content">
-            <div class="math-block" id="m2-s2a"></div>
-            <div class="math-block" id="m2-s2b"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s2-3">
-          <div class="step-label">Sustituir en la fórmula y simplificar <span class="badge badge-pts">+4 pts</span></div>
-          <div class="step-content">
-            <div class="math-block" id="m2-s3a"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s2-4">
-          <div class="step-label">Evaluar f'(0) — la pendiente <span class="badge badge-pts">+4 pts</span></div>
-          <div class="step-content">
-            Sustituimos x = 0:
-            <div class="math-block" id="m2-s4a"></div>
-            <div class="result-box success">
-              La pendiente de la recta tangente en (0, −1) es <strong>m = −1</strong>.
-            </div>
-          </div>
-        </div>
-
-        <div class="step" id="s2-5">
-          <div class="step-label">Ecuación de la recta tangente <span class="badge badge-pts">+6 pts</span></div>
-          <div class="step-content">
-            Usando <span id="m2-s5a" class="math-inline"></span> con <span id="m2-s5b" class="math-inline"></span>:
-            <div class="math-block" id="m2-s5c"></div>
-            <div class="result-box">
-              <div id="m2-s5d" class="math-block"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="step" id="s2-6">
-          <div class="step-label">Ecuación de la recta normal <span class="badge badge-pts">+4 pts</span> <span class="badge badge-ok">✓ 30 / 30 pts</span></div>
-          <div class="step-content">
-            La pendiente normal es <span id="m2-s6a" class="math-inline"></span>. Entonces:
-            <div class="math-block" id="m2-s6b"></div>
-            <div class="result-box danger">
-              <div id="m2-s6c" class="math-block"></div>
-            </div>
-          </div>
-        </div>
-
       </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(d=-2\) (valor único)</div>
+  </div>
+
+  <!-- ============ EJERCICIO 3 ============ -->
+  <div class="exercise" id="ej3">
+    <div class="exercise-title">Ejercicio 3 <span class="tag">inecuaciones</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+
+    <div class="sub-label">(a) &nbsp;\(\dfrac{5x}{x^2-25}\ge 0\)</div>
+    <div class="expand-all"><button onclick="toggleAll('ej3a', this)">Expandir todo</button></div>
+    <div class="steps" id="steps-ej3a">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Factorización</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\[\frac{5x}{x^2-25}=\frac{5x}{(x-5)(x+5)}\ge 0,\qquad x\neq \pm 5\]</p>
+          <p>Ceros del numerador: \(x=0\). Valores prohibidos (denominador nulo): \(x=-5,\;x=5\).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Diagrama de signos</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <table class="signs">
+            <tr><th></th><th>(−∞,−5)</th><th>(−5,0)</th><th>(0,5)</th><th>(5,∞)</th></tr>
+            <tr><td>\(5x\)</td><td>−</td><td>−</td><td>+</td><td>+</td></tr>
+            <tr><td>\(x+5\)</td><td>−</td><td>+</td><td>+</td><td>+</td></tr>
+            <tr><td>\(x-5\)</td><td>−</td><td>−</td><td>−</td><td>+</td></tr>
+            <tr><td>cociente</td><td>−</td><td>+</td><td>−</td><td>+</td></tr>
+          </table>
+          <p>Se buscan los intervalos donde el cociente es \(\ge 0\), excluyendo \(\pm5\).</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(x\in(-5,\,0]\;\cup\;(5,\,+\infty)\)</div>
+
+    <div class="sub-label">(b) &nbsp;\(\dfrac{5-2x}{7}\ge 1\)</div>
+    <div class="steps" id="steps-ej3b">
+      <div class="step open">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Desarrollo</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\[5-2x\ge 7 \;\Longrightarrow\; -2x\ge 2 \;\Longrightarrow\; x\le -1\]</p>
+          <p>(al dividir por \(-2\) se invierte la desigualdad).</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(x\in(-\infty,\,-1]\)</div>
+
+    <div class="sub-label">(c) &nbsp;\(\dfrac{2-5x}{3}\ge 5\)</div>
+    <div class="steps" id="steps-ej3c">
+      <div class="step open">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Desarrollo</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\[2-5x\ge 15 \;\Longrightarrow\; -5x\ge 13 \;\Longrightarrow\; x\le -\frac{13}{5}\]</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(x\in\left(-\infty,\,-\dfrac{13}{5}\right]\)</div>
+  </div>
+
+  <!-- ============ EJERCICIO 4 ============ -->
+  <div class="exercise" id="ej4">
+    <div class="exercise-title">Ejercicio 4 <span class="tag">dominios</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+
+    <div class="defin"><b>Definición (Dominio).</b> El dominio de una función real \(F\) es el conjunto de valores de la variable independiente para los cuales la regla de correspondencia produce un número real bien definido: \(\mathrm{Dom}\,F=\{x\in\mathbb{R}:F(x)\in\mathbb{R}\}\). Restricciones habituales: (i) un radical de índice par exige radicando \(\ge0\); (ii) un cociente exige denominador \(\neq0\). El dominio es la intersección de todas las condiciones.</div>
+
+    <div class="sub-label">(a) &nbsp;\(F(x)=\sqrt{4x-x^2}\)</div>
+    <div class="steps" id="steps-ej4a">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Condición y factorización</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Se necesita el radicando \(\ge 0\): \[4x-x^2\ge 0 \;\Longrightarrow\; x(4-x)\ge 0\]</p>
+          <p>Ceros: \(x=0\) y \(x=4\).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Diagrama de signos</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <table class="signs">
+            <tr><th></th><th>(−∞,0)</th><th>(0,4)</th><th>(4,∞)</th></tr>
+            <tr><td>\(x\)</td><td>−</td><td>+</td><td>+</td></tr>
+            <tr><td>\(4-x\)</td><td>+</td><td>+</td><td>−</td></tr>
+            <tr><td>\(x(4-x)\)</td><td>−</td><td>+</td><td>−</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(\mathrm{Dom}\,F=[0,\,4]\)</div>
+
+    <div class="sub-label">(b) &nbsp;\(F(x)=\sqrt{\dfrac{3-x}{x+2}}\)</div>
+    <div class="steps" id="steps-ej4b">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Condición</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Radicando \(\ge 0\) con denominador \(\neq 0\): \[\frac{3-x}{x+2}\ge 0,\qquad x\neq -2\]</p>
+          <p>Cero del numerador: \(x=3\); valor prohibido: \(x=-2\).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Diagrama de signos</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <table class="signs">
+            <tr><th></th><th>(−∞,−2)</th><th>(−2,3)</th><th>(3,∞)</th></tr>
+            <tr><td>\(3-x\)</td><td>+</td><td>+</td><td>−</td></tr>
+            <tr><td>\(x+2\)</td><td>−</td><td>+</td><td>+</td></tr>
+            <tr><td>cociente</td><td>−</td><td>+</td><td>−</td></tr>
+          </table>
+          <p>Se incluye \(x=3\) (numerador cero) y se excluye \(x=-2\).</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(\mathrm{Dom}\,F=(-2,\,3]\)</div>
+  </div>
+
+  <!-- ============ EJERCICIO 5 ============ -->
+  <div class="exercise" id="ej5">
+    <div class="exercise-title">Ejercicio 5 <span class="tag">recorrido</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+
+    <div class="defin"><b>Definición (Recorrido).</b> El recorrido de \(F\) es el conjunto de valores que toma \(F(x)\) al recorrer \(x\) su dominio: \(\mathrm{Rec}\,F=\{y\in\mathbb{R}:\exists\,x\in\mathrm{Dom}\,F,\;y=F(x)\}\). Estrategia para \(F(x)=c\pm\sqrt{g(x)}\): un radical par es siempre \(\ge0\) y, cuando \(g\) es sobreyectiva sobre \([0,+\infty)\), \(\sqrt{g(x)}\) toma todos esos valores; desde esa cota se propaga la desigualdad hasta \(F(x)\), invirtiendo el sentido al multiplicar por un negativo.</div>
+
+    <div class="sub-label">(a) &nbsp;\(F(x)=5-\sqrt{x+8}\)</div>
+    <div class="steps" id="steps-ej5a">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Cota del radical</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>El radical existe si \(x+8\ge 0\), es decir \(x\ge -8\) (dominio). Allí \(\sqrt{x+8}\ge 0\) y recorre todo \([0,+\infty)\) cuando \(x\) crece de \(-8\) a \(+\infty\).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Propagar la desigualdad hasta \(F\)</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Multiplicando por \(-1\) (se invierte el sentido): \[-\sqrt{x+8}\le 0 \;\Longrightarrow\; -\sqrt{x+8}\in(-\infty,0]\]</p>
+          <p>Sumando 5: \[F(x)=5-\sqrt{x+8}\le 5\]</p>
+          <p>El máximo \(y=5\) se alcanza en \(x=-8\); al crecer el radical sin cota, \(F(x)\) desciende hasta \(-\infty\).</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(\mathrm{Rec}\,F=(-\infty,\,5]\)</div>
+
+    <div class="sub-label">(b) &nbsp;\(F(x)=4-\sqrt{x+7}\)</div>
+    <div class="steps" id="steps-ej5b">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Cota del radical</div><div class="chevron">›</div></div>
+        <div class="step-body"><p>Dominio: \(x+7\ge0 \Rightarrow x\ge-7\). Allí \(\sqrt{x+7}\ge0\) y recorre \([0,+\infty)\).</p></div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Propagar hasta \(F\)</div><div class="chevron">›</div></div>
+        <div class="step-body"><p>\[-\sqrt{x+7}\le 0 \;\Longrightarrow\; F(x)=4-\sqrt{x+7}\le 4\]</p><p>Máximo \(y=4\) en \(x=-7\), descenso hasta \(-\infty\).</p></div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(\mathrm{Rec}\,F=(-\infty,\,4]\)</div>
+  </div>
+
+  <!-- ============ EJERCICIO 6 ============ -->
+  <div class="exercise" id="ej6">
+    <div class="exercise-title">Ejercicio 6 <span class="tag">dominio y recorrido</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+    <div class="exercise-statement">\(F(x)=\sqrt{x-8}+3\)</div>
+
+    <div class="defin"><b>Recordatorio.</b> \(\mathrm{Dom}\,F=\{x:F(x)\in\mathbb{R}\}\) son las entradas admisibles; \(\mathrm{Rec}\,F=\{y:\exists\,x,\;y=F(x)\}\) son las salidas efectivas. Para una raíz de índice par, la entrada exige radicando \(\ge0\) (dominio) y la salida hereda \(\sqrt{\;}\ge0\) (recorrido).</div>
+
+    <div class="expand-all"><button onclick="toggleAll('ej6', this)">Expandir todo</button></div>
+    <div class="steps" id="steps-ej6">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Dominio</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>El radical exige radicando \(\ge 0\): \[x-8\ge 0 \;\Longrightarrow\; x\ge 8\]</p>
+          <p>No hay otras restricciones, de modo que \(\mathrm{Dom}\,F=[8,+\infty)\).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Recorrido</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Sobre el dominio, \(\sqrt{x-8}\ge 0\) y recorre todo \([0,+\infty)\). Sumando 3 (traslación vertical que conserva el sentido):</p>
+          <p>\[F(x)=\sqrt{x-8}+3\ge 3\]</p>
+          <p>Valor mínimo \(y=3\) en \(x=8\), creciendo sin cota hacia \(+\infty\).</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(\mathrm{Dom}\,F=[8,\,+\infty)\) &nbsp;y&nbsp; \(\mathrm{Rec}\,F=[3,\,+\infty)\)</div>
+  </div>
+
+  <!-- ============ EJERCICIO 7 ============ -->
+  <div class="exercise" id="ej7">
+    <div class="exercise-title">Ejercicio 7 <span class="tag">inyectividad e inversa</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+    <div class="exercise-statement">\(F(x)=\dfrac{x+1}{3-x}\)</div>
+
+    <div class="expand-all"><button onclick="toggleAll('ej7', this)">Expandir todo</button></div>
+    <div class="steps" id="steps-ej7">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">(a) Prueba de inyectividad</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Supongamos \(F(x_1)=F(x_2)\): \[\frac{x_1+1}{3-x_1}=\frac{x_2+1}{3-x_2}\]</p>
+          <p>Producto cruzado: \[(x_1+1)(3-x_2)=(x_2+1)(3-x_1)\]</p>
+          <p>\[3x_1-x_1x_2+3-x_2 = 3x_2-x_1x_2+3-x_1\]</p>
+          <p>Cancelando \(-x_1x_2\) y \(3\): \[3x_1-x_2=3x_2-x_1 \;\Longrightarrow\; 4x_1=4x_2 \;\Longrightarrow\; x_1=x_2\]</p>
+          <p>Como \(F(x_1)=F(x_2)\Rightarrow x_1=x_2\), la función es <b>inyectiva</b>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">(b) Inversa</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Sea \(y=\dfrac{x+1}{3-x}\) y despejamos \(x\): \[y(3-x)=x+1 \;\Longrightarrow\; 3y-xy=x+1\]</p>
+          <p>\[3y-1=x+xy=x(1+y) \;\Longrightarrow\; x=\frac{3y-1}{y+1}\]</p>
+          <p>Intercambiando variables se obtiene la inversa.</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(F^{-1}(x)=\dfrac{3x-1}{x+1}\), con \(x\neq -1\) (y \(\mathrm{Dom}\,F\) excluye \(x=3\))</div>
+  </div>
+
+  <!-- ============ EJERCICIO 8 ============ -->
+  <div class="exercise" id="ej8">
+    <div class="exercise-title">Ejercicio 8 <span class="tag">teorema del resto</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+    <div class="exercise-statement">Si \(x^3+x^2+3\) se divide por \(x-k\), el resto es \(-1\). Hallar \(k\).</div>
+
+    <div class="expand-all"><button onclick="toggleAll('ej8', this)">Expandir todo</button></div>
+    <div class="steps" id="steps-ej8">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Teorema del resto</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>El resto de dividir \(P(x)\) por \((x-k)\) es \(P(k)\). Se impone \(P(k)=-1\):</p>
+          <p>\[k^3+k^2+3=-1 \;\Longrightarrow\; k^3+k^2+4=0\]</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Búsqueda de raíces racionales</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Divisores de 4: \(\pm1,\pm2,\pm4\). Probando \(k=-2\):</p>
+          <p>\[(-2)^3+(-2)^2+4=-8+4+4=0 \quad\checkmark\]</p>
+          <p>Factorizando: \(k^3+k^2+4=(k+2)(k^2-k+2)\). El factor \(k^2-k+2\) tiene \(\Delta=1-8<0\) (sin raíces reales).</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(k=-2\) (única solución real)</div>
+  </div>
+
+  <!-- ============ SEGUNDA PARTE ============ -->
+  <div class="part-label">Segunda parte</div>
+
+  <div class="exercise" id="p2ej1">
+    <div class="exercise-title">Ejercicio 1 <span class="tag">exponencial</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+    <div class="exercise-statement">\(\left(9^x\right)^2-12\cdot 9^x+27=0\)</div>
+
+    <div class="expand-all"><button onclick="toggleAll('p2ej1', this)">Expandir todo</button></div>
+    <div class="steps" id="steps-p2ej1">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Sustitución</div><div class="chevron">›</div></div>
+        <div class="step-body"><p>Sea \(u=9^x\) (con \(u>0\)). La ecuación queda cuadrática: \[u^2-12u+27=0\]</p></div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Resolver</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\[u=\frac{12\pm\sqrt{(12)^2-4(1)(27)}}{2}=\frac{12\pm\sqrt{36}}{2}=\frac{12\pm 6}{2}\]</p>
+          <p>Luego \(u_1=9\) y \(u_2=3\).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">3</div><div class="step-title">Volver a \(x\)</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\[9^x=9 \Rightarrow x=1; \qquad 9^x=3 \Rightarrow 3^{2x}=3^1 \Rightarrow 2x=1 \Rightarrow x=\tfrac12\]</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(x=1\) &nbsp;y&nbsp; \(x=\dfrac12\)</div>
+  </div>
+
+  <div class="exercise" id="p2ej2">
+    <div class="exercise-title">Ejercicio 2 <span class="tag">logarítmicas</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+
+    <div class="sub-label">(a) &nbsp;\(\log_3(x)+\log_3(2x-7)=\log_3(15)\)</div>
+    <div class="steps" id="steps-p2ej2a">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Propiedad del producto</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\[\log_3\big(x(2x-7)\big)=\log_3(15) \;\Longrightarrow\; x(2x-7)=15\]</p>
+          <p>\[2x^2-7x-15=0\]</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Resolver y validar</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\[x=\frac{7\pm\sqrt{49+120}}{4}=\frac{7\pm 13}{4}\;\Rightarrow\; x=5 \;\text{ o }\; x=-\tfrac32\]</p>
+          <p>Condición de existencia: \(x>0\) y \(2x-7>0\Rightarrow x>3{,}5\). Se descarta \(x=-\tfrac32\).</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(x=5\)</div>
+
+    <div class="sub-label">(b) &nbsp;\(\log_3(x)+\log_3(3x+8)=\log_3(35)\)</div>
+    <div class="steps" id="steps-p2ej2b">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Propiedad del producto y resolución</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\[x(3x+8)=35 \;\Longrightarrow\; 3x^2+8x-35=0\]</p>
+          <p>\[x=\frac{-8\pm\sqrt{64+420}}{6}=\frac{-8\pm 22}{6}\;\Rightarrow\; x=\tfrac73 \;\text{ o }\; x=-5\]</p>
+          <p>Condición: \(x>0\). Se descarta \(x=-5\).</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(x=\dfrac{7}{3}\)</div>
+  </div>
+
+  <div class="exercise" id="p2ej3">
+    <div class="exercise-title">Ejercicio 3 <span class="tag">crecimiento exponencial</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+    <div class="exercise-statement">Una bacteria crece a razón del 2% por hora; inicialmente hay 60.</div>
+
+    <div class="expand-all"><button onclick="toggleAll('p2ej3', this)">Expandir todo</button></div>
+    <div class="steps" id="steps-p2ej3">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">(a) Modelo exponencial</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Crecimiento porcentual constante \(\Rightarrow\) modelo \(P(t)=P_0(1+r)^t\) con \(P_0=60\) y \(r=0{,}02\):</p>
+          <p>\[P(t)=60\,(1{,}02)^{t}\]</p>
+          <p>donde \(t\) está en horas.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">(b) Evaluar en \(t=3\)</div><div class="chevron">›</div></div>
+        <div class="step-body"><p>\[P(3)=60\,(1{,}02)^3=60\,(1{,}061208)=63{,}67\ldots\]</p></div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(P(3)\approx 63{,}67\), es decir, aproximadamente 63 bacterias (64 si se redondea al alza)</div>
+  </div>
+
+  <div class="exercise" id="p2ej4">
+    <div class="exercise-title">Ejercicio 4 <span class="tag">división de polinomios</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+    <div class="exercise-statement">El resto de dividir \(2x^3+2x^2+6x+14\) por \(x^2+K\) es 8. Hallar \(K\).</div>
+
+    <div class="expand-all"><button onclick="toggleAll('p2ej4', this)">Expandir todo</button></div>
+    <div class="steps" id="steps-p2ej4">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">División de polinomios</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Primer término del cociente: \(2x\) (pues \(2x^3/x^2=2x\)): \[2x\cdot(x^2+K)=2x^3+2Kx\]</p>
+          <p>Restando: \(2x^2+(6-2K)x+14\).</p>
+          <p>Segundo término del cociente: \(2\) (pues \(2x^2/x^2=2\)): \[2\cdot(x^2+K)=2x^2+2K\]</p>
+          <p>Restando: resto \(=(6-2K)x+(14-2K)\).</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Imponer resto constante igual a 8</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Para que el resto sea la constante 8, el coeficiente de \(x\) debe anularse:</p>
+          <p>\[6-2K=0 \;\Longrightarrow\; K=3\]</p>
+          <p>Verificación del término independiente: \(14-2K=14-6=8\). \(\checkmark\)</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(K=3\) (cociente \(2x+2\), resto 8)</div>
+  </div>
+
+  <!-- ============ TERCERA PARTE ============ -->
+  <div class="part-label">Tercera parte</div>
+
+  <div class="exercise" id="p3ej5">
+    <div class="exercise-title">Ejercicio 5 <span class="tag">divisibilidad</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+    <div class="exercise-statement">Sea \(F(x)=x^6+2x^6+9K=3x^6+9K\). Determinar \(K\) tal que sea divisible por \(g(x)=x^2-1\).</div>
+
+    <div class="expand-all"><button onclick="toggleAll('p3ej5', this)">Expandir todo</button></div>
+    <div class="steps" id="steps-p3ej5">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Condición de divisibilidad</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\(g(x)=x^2-1=(x-1)(x+1)\). Para que \(g\mid F\) deben anularse \(F(1)\) y \(F(-1)\).</p>
+          <p>\[F(1)=3(1)^6+9K=3+9K\]</p>
+          <p>Por la paridad, \(F(-1)=3+9K\) da la misma condición.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Resolver</div><div class="chevron">›</div></div>
+        <div class="step-body"><p>\[3+9K=0 \;\Longrightarrow\; K=-\frac{1}{3}\]</p></div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>\(K=-\dfrac{1}{3}\)</div>
+  </div>
+
+  <div class="exercise" id="p3ej6">
+    <div class="exercise-title">Ejercicio 6 <span class="tag">raíces de polinomios</span><button class="play-problem-btn" onclick="playProblem(this)" title="Reproducir pasos de este problema">▶</button></div>
+
+    <div class="sub-label">(a) &nbsp;\(P(x)=4x^3+4x^2-19x-10\)</div>
+    <div class="steps" id="steps-p3ej6a">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Posibles raíces racionales</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Si \(\dfrac{p}{q}\) (irreducible) es raíz, entonces \(p\mid\) (término independiente \(=-10\)) y \(q\mid\) (coeficiente principal \(=4\)). Candidatas:</p>
+          <p>\[\pm1,\pm2,\pm5,\pm10,\;\pm\tfrac12,\pm\tfrac52,\;\pm\tfrac14,\pm\tfrac54\]</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">División sintética (Ruffini) con \(x=2\)</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <table class="signs">
+            <tr><th></th><th>4</th><th>4</th><th>−19</th><th>−10</th></tr>
+            <tr><td>2</td><td></td><td>8</td><td>24</td><td>10</td></tr>
+            <tr><td></td><td>4</td><td>12</td><td>5</td><td><b>0</b></td></tr>
+          </table>
+          <p>Se baja 4; \(4\cdot2=8\), \(4+8=12\); \(12\cdot2=24\), \(-19+24=5\); \(5\cdot2=10\), \(-10+10=0\).</p>
+          <p>Como el resto es 0, \(x=2\) es raíz y \((x-2)\) es factor. La fila inferior da el cociente:</p>
+          <p>\[P(x)=(x-2)\,(4x^2+12x+5)\]</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">3</div><div class="step-title">Factorizar el cociente cuadrático</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>\[4x^2+12x+5=0 \;\Longrightarrow\; x=\frac{-12\pm\sqrt{(12)^2-4(4)(5)}}{2(4)}=\frac{-12\pm 8}{8}\]</p>
+          <p>de donde \(x=-\tfrac12\) y \(x=-\tfrac52\). Así, \(4x^2+12x+5=(2x+1)(2x+5)\), y</p>
+          <p>\[P(x)=(x-2)(2x+1)(2x+5)\]</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta"><span class="label">Respuesta</span>Raíces: \(x=2,\quad x=-\dfrac12,\quad x=-\dfrac52\)</div>
+
+    <div class="sub-label">(b) &nbsp;\(P(x)=4x^3-12x^2+5x-6\)</div>
+    <div class="steps" id="steps-p3ej6b">
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">1</div><div class="step-title">Posibles raíces racionales</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Con \(p\mid 6\) y \(q\mid 4\): \[\pm1,\pm2,\pm3,\pm6,\;\pm\tfrac12,\pm\tfrac32,\;\pm\tfrac14,\pm\tfrac34\]</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">2</div><div class="step-title">Ruffini con las candidatas más simples</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p>Con \(x=3\):</p>
+          <table class="signs">
+            <tr><th></th><th>4</th><th>−12</th><th>5</th><th>−6</th></tr>
+            <tr><td>3</td><td></td><td>12</td><td>0</td><td>15</td></tr>
+            <tr><td></td><td>4</td><td>0</td><td>5</td><td><b>9</b></td></tr>
+          </table>
+          <p>resto \(=9\neq0\). Con \(x=2\):</p>
+          <table class="signs">
+            <tr><th></th><th>4</th><th>−12</th><th>5</th><th>−6</th></tr>
+            <tr><td>2</td><td></td><td>8</td><td>−8</td><td>−6</td></tr>
+            <tr><td></td><td>4</td><td>−4</td><td>−3</td><td><b>−12</b></td></tr>
+          </table>
+          <p>resto \(=-12\neq0\). Repitiendo con las candidatas fraccionarias tampoco se obtiene resto nulo.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-head" onclick="toggleStep(this)"><div class="step-num">3</div><div class="step-title">Conclusión</div><div class="chevron">›</div></div>
+        <div class="step-body">
+          <p><b>El polinomio no tiene raíces racionales</b>, de modo que Ruffini no lo factoriza sobre \(\mathbb{Q}\). Sus raíces se obtienen numéricamente: posee una única raíz real \(x\approx 2{,}68\), y un par de raíces complejas conjugadas.</p>
+        </div>
+      </div>
+    </div>
+    <div class="respuesta">
+      <span class="label">Respuesta</span>
+      Sin raíces racionales. Única raíz real \(x\approx 2{,}68\) (más un par complejo conjugado).<br><br>
+      <em>Observación:</em> es muy probable que el enunciado tuviera un signo distinto (p. ej. \(4x^3-12x^2+5x+6\)), que con Ruffini sí factoriza como \((x-2)(2x-3)(2x+1)\), con raíces \(2,\ \tfrac32,\ -\tfrac12\). Conviene verificar el signo con el docente.
     </div>
   </div>
 
-  <!-- ═══════════════ PROBLEMA 03 ═══════════════ -->
-  <div class="problem-panel" id="panel-2">
-    <div class="problem-title">Problema 03 <span class="pts-total">20 pts</span></div>
-    <div class="problem-desc">
-      Sea <span id="p3-head"></span>. (1) Intervalos crecientes — 10 pts.
-      (2) Intervalos decrecientes — 6 pts. (3) Puntos críticos y significado — 4 pts.
-    </div>
-    <div class="dev-box">
-      <div class="dev-label">DESARROLLO — Se recomienda derivar de forma metódica para no cometer errores</div>
-      <div class="controls">
-        <button class="btn play-btn" id="btn-play-3" onclick="togglePlay(3)">▶ Play</button>
-        <button class="btn nav-btn" onclick="stepBack(3)">←</button>
-        <button class="btn nav-btn" onclick="stepFwd(3)">→</button>
-        <div class="progress-wrap">
-          <div class="progress-bar"><div class="progress-fill" id="prog-3" style="width:0%"></div></div>
-          <div class="step-counter" id="counter-3">0 / 6</div>
-        </div>
-      </div>
-      <div class="steps-container" id="steps-3">
-
-        <div class="step" id="s3-0">
-          <div class="step-label">Calcular f'(x) <span class="badge badge-pts">+3 pts</span></div>
-          <div class="step-content">
-            Derivamos término a término:
-            <div class="math-block" id="m3-s0a"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s3-1">
-          <div class="step-label">Igualar a cero — puntos críticos <span class="badge badge-pts">+4 pts</span></div>
-          <div class="step-content">
-            Aplicamos la fórmula cuadrática a <span id="m3-s1a" class="math-inline"></span>:
-            <div class="math-block" id="m3-s1b"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s3-2">
-          <div class="step-label">Resultados de los puntos críticos <span class="badge badge-pts">+3 pts</span></div>
-          <div class="step-content">
-            <div class="math-block" id="m3-s2a"></div>
-            Estos dos valores dividen la recta real en tres intervalos de análisis.
-          </div>
-        </div>
-
-        <div class="step" id="s3-3">
-          <div class="step-label">Tabla de signo de f'(x) <span class="badge badge-pts">+3 pts</span></div>
-          <div class="step-content">
-            Evaluamos f'(x) con un punto representativo de cada intervalo:
-            <div class="math-block" id="m3-s3a"></div>
-            <div class="math-block" id="m3-s3b"></div>
-            <div class="math-block" id="m3-s3c"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s3-4">
-          <div class="step-label">Intervalos crecientes y decrecientes <span class="badge badge-pts">+6 pts</span></div>
-          <div class="step-content">
-            <div class="result-box success">
-              <strong>Creciente</strong> (f' > 0): <span id="m3-s4a" class="math-inline"></span>
-            </div>
-            <div class="result-box danger" style="margin-top:8px">
-              <strong>Decreciente</strong> (f' < 0): <span id="m3-s4b" class="math-inline"></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="step" id="s3-5">
-          <div class="step-label">Puntos críticos — significado geométrico <span class="badge badge-pts">+4 pts</span> <span class="badge badge-ok">✓ 20 / 20 pts</span></div>
-          <div class="step-content">
-            En los puntos donde <span id="m3-s5a" class="math-inline"></span>, la función no crece ni decrece:<br><br>
-            • <span id="m3-s5b" class="math-inline"></span> es un <strong>máximo local</strong>: la función pasa de crecer a decrecer.<br>
-            • <span id="m3-s5c" class="math-inline"></span> es un <strong>mínimo local</strong>: la función pasa de decrecer a crecer.<br><br>
-            Geométricamente, la recta tangente a la gráfica en esos puntos es <strong>horizontal</strong>.
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════ PROBLEMA 04 ═══════════════ -->
-  <div class="problem-panel" id="panel-3">
-    <div class="problem-title">Problema 04 <span class="pts-total">30 pts</span></div>
-    <div class="problem-desc">
-      Demostrar que <span id="p4-head"></span> y <span id="p4-head2"></span>,
-      usando derivación implícita (análogo a la sugerencia con arctan).
-    </div>
-    <div class="dev-box">
-      <div class="dev-label">DESARROLLO</div>
-      <div class="controls">
-        <button class="btn play-btn" id="btn-play-4" onclick="togglePlay(4)">▶ Play</button>
-        <button class="btn nav-btn" onclick="stepBack(4)">←</button>
-        <button class="btn nav-btn" onclick="stepFwd(4)">→</button>
-        <div class="progress-wrap">
-          <div class="progress-bar"><div class="progress-fill" id="prog-4" style="width:0%"></div></div>
-          <div class="step-counter" id="counter-4">0 / 8</div>
-        </div>
-      </div>
-      <div class="steps-container" id="steps-4">
-
-        <div class="step" id="s4-0">
-          <div class="step-label">Parte A · arcsin(x) — reescribir <span class="badge badge-pts">+3 pts</span></div>
-          <div class="step-content">
-            Sea <span id="m4-s0a" class="math-inline"></span>. Por definición de arcoseno:
-            <div class="math-block" id="m4-s0b"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s4-1">
-          <div class="step-label">Derivar implícitamente respecto de x <span class="badge badge-pts">+5 pts</span></div>
-          <div class="step-content">
-            Derivamos ambos lados. El lado derecho da 1; el izquierdo por regla de la cadena:
-            <div class="math-block" id="m4-s1a"></div>
-            Despejamos y':
-            <div class="math-block" id="m4-s1b"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s4-2">
-          <div class="step-label">Expresar cos(y) en términos de x <span class="badge badge-pts">+7 pts</span></div>
-          <div class="step-content">
-            Usamos la identidad pitagórica <span id="m4-s2a" class="math-inline"></span>:
-            <div class="math-block" id="m4-s2b"></div>
-            Como <span id="m4-s2c" class="math-inline"></span> (dominio del arcoseno), cos(y) ≥ 0, por lo tanto:
-            <div class="math-block" id="m4-s2d"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s4-3">
-          <div class="step-label">Resultado — derivada de arcsin(x) <span class="badge badge-ok">✓ +15 pts</span></div>
-          <div class="step-content">
-            Reemplazando cos(y) y recordando que sin(y) = x:
-            <div class="result-box success">
-              <div class="math-block" id="m4-s3a"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="step" id="s4-4">
-          <div class="step-label">Parte B · arccos(x) — reescribir <span class="badge badge-pts">+3 pts</span></div>
-          <div class="step-content">
-            Sea <span id="m4-s4a" class="math-inline"></span>. Por definición de arcocoseno:
-            <div class="math-block" id="m4-s4b"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s4-5">
-          <div class="step-label">Derivar implícitamente <span class="badge badge-pts">+4 pts</span></div>
-          <div class="step-content">
-            Derivamos ambos lados respecto de x:
-            <div class="math-block" id="m4-s5a"></div>
-            Despejamos y':
-            <div class="math-block" id="m4-s5b"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s4-6">
-          <div class="step-label">Expresar sin(y) en términos de x <span class="badge badge-pts">+5 pts</span></div>
-          <div class="step-content">
-            Por la identidad pitagórica:
-            <div class="math-block" id="m4-s6a"></div>
-            Como <span id="m4-s6b" class="math-inline"></span>, se tiene sin(y) ≥ 0, entonces:
-            <div class="math-block" id="m4-s6c"></div>
-          </div>
-        </div>
-
-        <div class="step" id="s4-7">
-          <div class="step-label">Resultado — derivada de arccos(x) <span class="badge badge-ok">✓ 30 / 30 pts</span></div>
-          <div class="step-content">
-            Reemplazando sin(y) = √(1−x²) y recordando cos(y) = x:
-            <div class="result-box danger">
-              <div class="math-block" id="m4-s7a"></div>
-            </div>
-            <p style="font-size:14px;color:var(--text-muted);margin-top:10px">
-              <em>Nota:</em> como arcsin(x) + arccos(x) = π/2 para todo x ∈ [−1, 1],
-              sus derivadas son opuestas, lo cual es consistente con ambos resultados.
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════ PANEL REFUERZO ═══════════════ -->
-  <div class="problem-panel" id="panel-4">
-    <div class="refuerzo-section">
-    <div class="refuerzo-title">Refuerzo de Propiedades de Derivación</div>
-    <div class="refuerzo-subtitle">Haz clic en cada tarjeta para expandir · Fundamentos para el control</div>
-
-    <!-- 1. Definición de derivada -->
-    <div class="ref-card open" id="rc1">
-      <div class="ref-card-header" onclick="toggleCard('rc1')">
-        <span class="ref-card-icon">DEF</span>
-        <span class="ref-card-title">Definición de derivada e interpretación geométrica</span>
-        <span class="ref-chevron">▼</span>
-      </div>
-      <div class="ref-card-body">
-        <div class="ref-def">
-          La <strong>derivada</strong> de una función f en el punto x es el límite del cociente de incrementos cuando el incremento en x tiende a cero:
-        </div>
-        <div class="ref-math" id="rdef1"></div>
-        <div class="ref-def" style="margin-top:12px">
-          <strong>Interpretación geométrica:</strong> f'(x) es la <em>pendiente de la recta tangente</em> a la gráfica de f en el punto (x, f(x)). Es decir, si la recta tangente en ese punto es <span id="rdef2" class="ref-math-inline"></span>, entonces su pendiente <em>m</em> es exactamente f'(x):
-        </div>
-        <div class="ref-math" id="rdef3"></div>
-        <div class="ref-reading">
-          <strong>Lectura:</strong> "La derivada de f en x es el límite, cuando h tiende a cero, del cociente entre el incremento de la función y el incremento de la variable." Si este límite existe, la función es <em>derivable</em> en x.
-        </div>
-        <div class="ref-note">
-          La recta normal en ese mismo punto tiene pendiente −1/f'(x), es decir, es perpendicular a la tangente.
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. Derivadas inmediatas -->
-    <div class="ref-card" id="rc2">
-      <div class="ref-card-header" onclick="toggleCard('rc2')">
-        <span class="ref-card-icon">TBL</span>
-        <span class="ref-card-title">Derivadas inmediatas (tabla de referencia)</span>
-        <span class="ref-chevron">▼</span>
-      </div>
-      <div class="ref-card-body">
-        <div class="ref-def">Las siguientes derivadas se obtienen directamente de la definición y se memorizan como base de todo cálculo diferencial:</div>
-        <table class="ref-table">
-          <thead>
-            <tr>
-              <th class="col-fn">Función f(x)</th>
-              <th class="col-der">Derivada f'(x)</th>
-              <th class="col-note">Condición / nota</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span id="di1f"></span></td>
-              <td><span id="di1d"></span></td>
-              <td>k constante</td>
-            </tr>
-            <tr>
-              <td><span id="di2f"></span></td>
-              <td><span id="di2d"></span></td>
-              <td>n ∈ ℝ, regla de la potencia</td>
-            </tr>
-            <tr>
-              <td><span id="di3f"></span></td>
-              <td><span id="di3d"></span></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><span id="di4f"></span></td>
-              <td><span id="di4d"></span></td>
-              <td>a > 0, a ≠ 1</td>
-            </tr>
-            <tr>
-              <td><span id="di5f"></span></td>
-              <td><span id="di5d"></span></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><span id="di6f"></span></td>
-              <td><span id="di6d"></span></td>
-              <td>x > 0</td>
-            </tr>
-            <tr>
-              <td><span id="di7f"></span></td>
-              <td><span id="di7d"></span></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><span id="di8f"></span></td>
-              <td><span id="di8d"></span></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><span id="di9f"></span></td>
-              <td><span id="di9d"></span></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td><span id="di10f"></span></td>
-              <td><span id="di10d"></span></td>
-              <td>|x| &lt; 1</td>
-            </tr>
-            <tr>
-              <td><span id="di11f"></span></td>
-              <td><span id="di11d"></span></td>
-              <td>|x| &lt; 1</td>
-            </tr>
-            <tr>
-              <td><span id="di12f"></span></td>
-              <td><span id="di12d"></span></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 3. Linealidad -->
-    <div class="ref-card" id="rc3">
-      <div class="ref-card-header" onclick="toggleCard('rc3')">
-        <span class="ref-card-icon">R1</span>
-        <span class="ref-card-title">Linealidad de la derivada</span>
-        <span class="ref-chevron">▼</span>
-      </div>
-      <div class="ref-card-body">
-        <div class="ref-def">La derivada es un operador <strong>lineal</strong>: respeta sumas y multiplicación por constantes.</div>
-        <div class="ref-math" id="rlin1"></div>
-        <div class="ref-math" id="rlin2"></div>
-        <div class="ref-reading">
-          <strong>Lectura · suma:</strong> "La derivada de una suma es la suma de las derivadas."<br>
-          <strong>Lectura · constante:</strong> "Una constante multiplicando sale fuera de la derivada."
-        </div>
-        <div class="ref-note">
-          Estas dos reglas juntas permiten derivar cualquier polinomio término a término, que es el caso más frecuente en un primer curso.
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. Producto -->
-    <div class="ref-card" id="rc4">
-      <div class="ref-card-header" onclick="toggleCard('rc4')">
-        <span class="ref-card-icon">R2</span>
-        <span class="ref-card-title">Regla del producto</span>
-        <span class="ref-chevron">▼</span>
-      </div>
-      <div class="ref-card-body">
-        <div class="ref-def">Si f y g son derivables en x, entonces su producto también lo es y:</div>
-        <div class="ref-math" id="rprod1"></div>
-        <div class="ref-reading">
-          <strong>Lectura óptima:</strong> "<em>La derivada de la primera por la segunda sin derivar, más la primera sin derivar por la derivada de la segunda.</em>"<br><br>
-          Es decir: cada factor toma turno de ser derivado mientras el otro permanece intacto. Esta lectura en voz alta evita olvidar alguno de los dos términos.
-        </div>
-        <div class="ref-math" id="rprod2"></div>
-        <div class="ref-note">
-          Ejemplo: si h(x) = x² · eˣ, entonces h'(x) = 2x · eˣ + x² · eˣ = eˣ(2x + x²).
-        </div>
-      </div>
-    </div>
-
-    <!-- 5. Cociente -->
-    <div class="ref-card" id="rc5">
-      <div class="ref-card-header" onclick="toggleCard('rc5')">
-        <span class="ref-card-icon">R3</span>
-        <span class="ref-card-title">Regla del cociente</span>
-        <span class="ref-chevron">▼</span>
-      </div>
-      <div class="ref-card-body">
-        <div class="ref-def">Si f y g son derivables en x y g(x) ≠ 0, entonces:</div>
-        <div class="ref-math" id="rcoc1"></div>
-        <div class="ref-reading">
-          <strong>Lectura óptima:</strong> "<em>La derivada del numerador por el denominador sin derivar, menos el numerador sin derivar por la derivada del denominador, todo dividido por el denominador al cuadrado.</em>"<br><br>
-          El orden importa: primero va el numerador derivado, no el denominador. El signo del segundo término es siempre <strong>menos</strong>.
-        </div>
-        <div class="ref-math" id="rcoc2"></div>
-        <div class="ref-note">
-          Ejemplo del control: f(x) = eˣ/(x²−1) → f'(x) = [eˣ(x²−1) − eˣ·2x] / (x²−1)².
-        </div>
-      </div>
-    </div>
-
-    <!-- 6. Cadena -->
-    <div class="ref-card" id="rc6">
-      <div class="ref-card-header" onclick="toggleCard('rc6')">
-        <span class="ref-card-icon">R4</span>
-        <span class="ref-card-title">Regla de la cadena</span>
-        <span class="ref-chevron">▼</span>
-      </div>
-      <div class="ref-card-body">
-        <div class="ref-def">Si h(x) = f(g(x)) es una composición de funciones derivables, entonces:</div>
-        <div class="ref-math" id="rcad1"></div>
-        <div class="ref-reading">
-          <strong>Lectura óptima:</strong> "<em>La derivada de la función exterior evaluada en la función interior, multiplicada por la derivada de la función interior.</em>"<br><br>
-          O más corto: "<em>Derivada de afuera evaluada adentro, por derivada de adentro.</em>"
-        </div>
-        <div class="ref-math" id="rcad2"></div>
-        <div class="ref-reading" style="margin-top:10px">
-          <strong>Versión Leibniz</strong> (muy útil para ver la cadena visualmente):<br>
-          <span id="rcad3" style="display:inline-block;margin-top:6px"></span><br><br>
-          Se lee: "la derivada de y respecto de x es la derivada de y respecto de u, por la derivada de u respecto de x." Las "du" se cancelan formalmente como fracciones.
-        </div>
-        <div class="ref-note">
-          Ejemplo del control: h(x) = sin(4ˣ) → h'(x) = cos(4ˣ) · (4ˣ ln 4). Exterior: sin(·), interior: 4ˣ.
-        </div>
-      </div>
-    </div>
-
-  </div>
-  </div>
-  <!-- FIN PANEL REFUERZO -->
-
-  <div class="doc-footer">
-    Complemento Matemático · Control N°1: Derivadas · Resolución interactiva
-  </div>
+  <div class="doc-footer">Guía de Álgebra · Resolución detallada paso a paso</div>
 
 </div>
 
 <script>
-/* ─── STATE ─── */
-const S = {
-  1: { cur: -1, total: 7, playing: false, timer: null },
-  2: { cur: -1, total: 7, playing: false, timer: null },
-  3: { cur: -1, total: 6, playing: false, timer: null },
-  4: { cur: -1, total: 8, playing: false, timer: null }
+function toggleStep(head) {
+  const step = head.parentElement;
+  step.classList.toggle('open');
+}
+
+function toggleAll(prefix, btn) {
+  const container = document.getElementById('steps-' + prefix);
+  if (!container) return;
+  const steps = container.querySelectorAll('.step');
+  const anyClosed = Array.from(steps).some(s => !s.classList.contains('open'));
+  steps.forEach(s => s.classList.toggle('open', anyClosed));
+  btn.textContent = anyClosed ? 'Contraer todo' : 'Expandir todo';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '\\[', right: '\\]', display: true},
+      {left: '\\(', right: '\\)', display: false}
+    ],
+    throwOnError: false
+  });
+});
+
+/* ── REPRODUCCIÓN AUTOMÁTICA POR PROBLEMA ── */
+const player = {
+  steps: [],
+  index: 0,
+  timer: null,
+  playing: false,
+  btn: null,
 };
 
-/* ─── KATEX HELPERS ─── */
-function r(id, tex, display) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  katex.render(tex, el, { throwOnError: false, displayMode: !!display });
-}
+function playProblem(btn) {
+  const exercise = btn.closest('.exercise');
+  if (!exercise) return;
 
-/* ─── RENDER ALL MATH ─── */
-function initMath() {
-  /* — headers — */
-  r('p1-head',  'f(x) = 1 + \\sin((2^x)^2)');
-  r('p1-head2', "f'''(x) = \\dfrac{d^3f}{dx^3}");
-  r('p2-head',  'f(x) = \\dfrac{e^x}{x^2-1}');
-  r('p3-head',  'f(x) = x^3 - 2x^2 + x - 1');
-  r('p4-head',  "(\\arcsin x)' = \\dfrac{1}{\\sqrt{1-x^2}}");
-  r('p4-head2', "(\\arccos x)' = -\\dfrac{1}{\\sqrt{1-x^2}}");
-
-  /* ══ P1 ══ */
-  r('m1-s0a', '(2^x)^2 = 4^x \\implies f(x) = 1 + \\sin(4^x)', true);
-  r('m1-s1a', '\\tfrac{d}{dx}\\sin(u) = \\cos(u)\\cdot u\'');
-  r('m1-s1b', '4^x');
-  r('m1-s1c', '4^x\\ln 4');
-  r('m1-s1d', "f'(x) = \\ln(4)\\,4^x\\cos(4^x)", true);
-  r('m1-s2a', "f'(x) = \\ln(4)\\cdot 4^x \\cdot \\cos(4^x)");
-  r('m1-s2b', '(uv)\'=u\'v+uv\'');
-  r('m1-s2c', "f''(x) = \\ln(4)\\left[\\tfrac{d}{dx}(4^x)\\cdot\\cos(4^x)+4^x\\cdot\\tfrac{d}{dx}(\\cos(4^x))\\right]", true);
-  r('m1-s2d', '\\tfrac{d}{dx}(4^x) = \\ln(4)\\,4^x', true);
-  r('m1-s2e', '\\tfrac{d}{dx}(\\cos(4^x)) = -\\sin(4^x)\\cdot 4^x\\ln(4)', true);
-  r('m1-s2f', "f''(x) = \\ln(4)\\bigl[\\ln(4)\\,4^x\\cos(4^x) - \\ln(4)\\,(4^x)^2\\sin(4^x)\\bigr]", true);
-  r('m1-s3a', '\\ln^2(4)\\cdot 4^x');
-  r('m1-s3b', "f''(x) = \\ln^2(4)\\,4^x\\bigl[\\cos(4^x)-4^x\\sin(4^x)\\bigr]", true);
-  r('m1-s4a', "f''(x) = \\ln^2(4)\\cdot 4^x\\bigl[\\cos(4^x)-4^x\\sin(4^x)\\bigr]");
-  r('m1-s4b', '(uv)\'=u\'v+uv\'');
-  r('m1-s4c', "f'''(x)=\\ln^2(4)\\left[\\underbrace{\\tfrac{d}{dx}(4^x)}_{\\ln(4)\\,4^x}\\cdot\\bigl[\\cos(4^x)-4^x\\sin(4^x)\\bigr]+4^x\\cdot\\tfrac{d}{dx}\\bigl[\\cos(4^x)-4^x\\sin(4^x)\\bigr]\\right]", true);
-  r('m1-s5a', '\\tfrac{d}{dx}(4^x) = \\ln(4)\\,4^x', true);
-  r('m1-s5b', '\\tfrac{d}{dx}\\bigl[\\cos(4^x)-4^x\\sin(4^x)\\bigr] = -\\ln(4)\\,4^x\\sin(4^x)\\;-\\;\\ln(4)\\,4^x\\sin(4^x)\\;-\\;\\ln(4)\\,(4^x)^2\\cos(4^x)', true);
-  r('m1-s6a', '\\ln^2(4)\\cdot 4^x');
-  r('m1-s6b', "\\boxed{f'''(x) = \\ln^3(4)\\,4^x\\Bigl[\\cos(4^x)\\,-\\,2\\cdot 4^x\\sin(4^x)\\,-\\,(4^x)^2\\cos(4^x)\\Bigr]}", true);
-
-  /* ══ P2 ══ */
-  r('m2-s0a', 'f(x)=\\tfrac{e^x}{x^2-1}');
-  r('m2-s0b', 'f(0)=\\dfrac{e^0}{0^2-1}=\\dfrac{1}{-1}=-1', true);
-  r('m2-s1a', "\\left(\\dfrac{u}{v}\\right)'=\\dfrac{u'v-uv'}{v^2}", true);
-  r('m2-s1b', 'u=e^x');
-  r('m2-s1c', 'v=x^2-1');
-  r('m2-s2a', "u'=e^x", true);
-  r('m2-s2b', "v'=2x", true);
-  r('m2-s3a', "f'(x)=\\dfrac{e^x(x^2-1)-e^x(2x)}{(x^2-1)^2}=\\dfrac{e^x(x^2-2x-1)}{(x^2-1)^2}", true);
-  r('m2-s4a', "f'(0)=\\dfrac{e^0(0-0-1)}{(0-1)^2}=\\dfrac{-1}{1}=-1", true);
-  r('m2-s5a', "y=f'(x_{\\tan})(x-x_{\\tan})+f(x_{\\tan})");
-  r('m2-s5b', "x_{\\tan}=0,\\;f'(0)=-1,\\;f(0)=-1");
-  r('m2-s5c', 'y=-1\\cdot(x-0)+(-1)=-x-1', true);
-  r('m2-s5d', '\\boxed{y=-x-1}', true);
-  r('m2-s6a', "-\\dfrac{1}{f'(0)}=-\\dfrac{1}{-1}=1");
-  r('m2-s6b', 'y=1\\cdot(x-0)+(-1)=x-1', true);
-  r('m2-s6c', '\\boxed{y=x-1}', true);
-
-  /* ══ P3 ══ */
-  r('m3-s0a', "f'(x)=3x^2-4x+1", true);
-  r('m3-s1a', '3x^2-4x+1=0');
-  r('m3-s1b', 'x=\\dfrac{4\\pm\\sqrt{16-12}}{6}=\\dfrac{4\\pm 2}{6}\\implies x_1=1,\\quad x_2=\\tfrac{1}{3}', true);
-  r('m3-s2a', 'x_1=1 \\quad \\text{y} \\quad x_2=\\tfrac{1}{3}\\qquad\\text{Intervalos: }\\left(-\\infty,\\tfrac{1}{3}\\right),\\;\\left(\\tfrac{1}{3},1\\right),\\;(1,+\\infty)', true);
-  r('m3-s3a', "f'(0)=3(0)^2-4(0)+1=1>0\\implies\\text{creciente en }\\left(-\\infty,\\tfrac{1}{3}\\right)", true);
-  r('m3-s3b', "f'\\!\\left(\\tfrac{1}{2}\\right)=3\\cdot\\tfrac{1}{4}-4\\cdot\\tfrac{1}{2}+1=\\tfrac{3}{4}-2+1=-\\tfrac{1}{4}<0\\implies\\text{decreciente en }\\left(\\tfrac{1}{3},1\\right)", true);
-  r('m3-s3c', "f'(2)=3(4)-4(2)+1=5>0\\implies\\text{creciente en }(1,+\\infty)", true);
-  r('m3-s4a', "\\left(-\\infty,\\,\\tfrac{1}{3}\\right)\\cup(1,+\\infty)");
-  r('m3-s4b', "\\left(\\tfrac{1}{3},\\,1\\right)");
-  r('m3-s5a', "f'(x)=0");
-  r('m3-s5b', "x_2=\\tfrac{1}{3}");
-  r('m3-s5c', "x_1=1");
-
-  /* ══ P4 ══ */
-  r('m4-s0a', 'y=\\arcsin(x)');
-  r('m4-s0b', 'y=\\arcsin(x)\\;\\Longleftrightarrow\\;\\sin(y)=x', true);
-  r('m4-s1a', '\\cos(y)\\cdot y\'=1', true);
-  r('m4-s1b', "y'=\\dfrac{1}{\\cos(y)}", true);
-  r('m4-s2a', '\\sin^2(y)+\\cos^2(y)=1');
-  r('m4-s2b', '\\cos^2(y)=1-\\sin^2(y)=1-x^2', true);
-  r('m4-s2c', "y\\in\\left[-\\tfrac{\\pi}{2},\\tfrac{\\pi}{2}\\right]");
-  r('m4-s2d', '\\cos(y)=\\sqrt{1-x^2}', true);
-  r('m4-s3a', "\\boxed{(\\arcsin x)'=\\dfrac{1}{\\sqrt{1-x^2}}}", true);
-  r('m4-s4a', 'y=\\arccos(x)');
-  r('m4-s4b', 'y=\\arccos(x)\\;\\Longleftrightarrow\\;\\cos(y)=x', true);
-  r('m4-s5a', '-\\sin(y)\\cdot y\'=1', true);
-  r('m4-s5b', "y'=-\\dfrac{1}{\\sin(y)}", true);
-  r('m4-s6a', '\\sin^2(y)=1-\\cos^2(y)=1-x^2\\implies\\sin^2(y)=1-x^2', true);
-  r('m4-s6b', 'y\\in[0,\\pi]');
-  r('m4-s6c', '\\sin(y)=\\sqrt{1-x^2}', true);
-  r('m4-s7a', "\\boxed{(\\arccos x)'=-\\dfrac{1}{\\sqrt{1-x^2}}}", true);
-}
-
-/* ─── UI UPDATE ─── */
-function updateUI(p) {
-  const s = S[p];
-  for (let i = 0; i < s.total; i++) {
-    const el = document.getElementById('s' + p + '-' + i);
-    if (!el) continue;
-    el.classList.remove('active', 'prev');
-    if (i === s.cur) el.classList.add('active');
-    else if (i < s.cur) el.classList.add('prev');
+  // Si este mismo botón está reproduciendo, lo pausamos
+  if (player.playing && player.btn === btn) {
+    pausePlayer();
+    return;
   }
-  const pct = s.cur < 0 ? 0 : Math.round(((s.cur + 1) / s.total) * 100);
-  document.getElementById('prog-' + p).style.width = pct + '%';
-  document.getElementById('counter-' + p).textContent =
-    (s.cur < 0 ? 0 : s.cur + 1) + ' / ' + s.total;
 
-  if (s.cur >= 0) {
-    const el = document.getElementById('s' + p + '-' + s.cur);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  // Si otro problema está reproduciéndose, lo detenemos primero
+  if (player.playing && player.btn !== btn) {
+    pausePlayer();
+  }
+
+  const resuming = player.btn === btn && player.steps.length && player.index < player.steps.length;
+
+  if (!resuming) {
+    // Comienzo nuevo (o reinicio si ya había terminado este problema)
+    if (player.btn && player.btn !== btn) {
+      player.btn.classList.remove('is-playing');
+      player.btn.textContent = '▶';
+    }
+    player.steps = Array.from(exercise.querySelectorAll('.step'));
+    player.steps.forEach(s => { s.classList.remove('open'); s.classList.remove('playing-current'); });
+    player.index = 0;
+  }
+
+  player.btn = btn;
+  player.playing = true;
+  btn.textContent = '⏸';
+  btn.classList.add('is-playing');
+  runPlayerStep();
+}
+
+function runPlayerStep() {
+  if (!player.playing) return;
+  player.steps.forEach(s => s.classList.remove('playing-current'));
+  if (player.index >= player.steps.length) {
+    finishPlayer();
+    return;
+  }
+  const step = player.steps[player.index];
+  step.classList.add('open');
+  step.classList.add('playing-current');
+  step.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  player.index++;
+  player.timer = setTimeout(runPlayerStep, 2600);
+}
+
+function pausePlayer() {
+  player.playing = false;
+  clearTimeout(player.timer);
+  if (player.btn) {
+    player.btn.textContent = '▶';
+    player.btn.classList.remove('is-playing');
   }
 }
 
-function stepFwd(p) {
-  const s = S[p];
-  if (s.cur < s.total - 1) { s.cur++; updateUI(p); }
-  else stopPlay(p);
+function finishPlayer() {
+  player.playing = false;
+  if (player.btn) {
+    player.btn.textContent = '▶';
+    player.btn.classList.remove('is-playing');
+  }
 }
-
-function stepBack(p) {
-  const s = S[p];
-  if (s.cur > -1) { s.cur--; updateUI(p); }
-}
-
-function stopPlay(p) {
-  const s = S[p];
-  s.playing = false;
-  clearInterval(s.timer);
-  s.timer = null;
-  const btn = document.getElementById('btn-play-' + p);
-  if (btn) btn.textContent = '▶ Play';
-}
-
-function togglePlay(p) {
-  const s = S[p];
-  if (s.playing) { stopPlay(p); return; }
-  s.playing = true;
-  const btn = document.getElementById('btn-play-' + p);
-  if (btn) btn.textContent = '⏸ Pausa';
-  if (s.cur >= s.total - 1) { s.cur = -1; updateUI(p); }
-  s.timer = setInterval(() => {
-    if (s.cur < s.total - 1) { s.cur++; updateUI(p); }
-    else stopPlay(p);
-  }, 2200);
-}
-
-function showProblem(idx, el) {
-  document.querySelectorAll('.problem-panel').forEach((p, i) =>
-    p.classList.toggle('active', i === idx));
-  document.querySelectorAll('.tab').forEach((t, i) =>
-    t.classList.toggle('active', i === idx));
-  [1, 2, 3, 4].forEach(p => { if (S[p] && S[p].playing) stopPlay(p); });
-}
-
-function toggleCard(id) {
-  document.getElementById(id).classList.toggle('open');
-}
-
-function initRefuerzo() {
-  /* Definición */
-  r('rdef1', "f'(x) = \\lim_{h \\to 0} \\frac{f(x+h)-f(x)}{h}", true);
-  r('rdef2', 'y = mx + b');
-  r('rdef3', "m = f'(x_0) = \\lim_{h \\to 0} \\frac{f(x_0+h)-f(x_0)}{h}", true);
-
-  /* Tabla inmediatas */
-  r('di1f',  'k');                            r('di1d',  '0');
-  r('di2f',  'x^n');                          r('di2d',  'n\\,x^{n-1}');
-  r('di3f',  'e^x');                          r('di3d',  'e^x');
-  r('di4f',  'a^x');                          r('di4d',  'a^x \\ln a');
-  r('di5f',  '\\ln x');                       r('di5d',  '\\dfrac{1}{x}');
-  r('di6f',  '\\log_a x');                    r('di6d',  '\\dfrac{1}{x \\ln a}');
-  r('di7f',  '\\sin x');                      r('di7d',  '\\cos x');
-  r('di8f',  '\\cos x');                      r('di8d',  '-\\sin x');
-  r('di9f',  '\\tan x');                      r('di9d',  '\\sec^2 x');
-  r('di10f', '\\arcsin x');                   r('di10d', '\\dfrac{1}{\\sqrt{1-x^2}}');
-  r('di11f', '\\arccos x');                   r('di11d', '-\\dfrac{1}{\\sqrt{1-x^2}}');
-  r('di12f', '\\arctan x');                   r('di12d', '\\dfrac{1}{1+x^2}');
-
-  /* Linealidad */
-  r('rlin1', "\\bigl[f(x)+g(x)\\bigr]' = f'(x)+g'(x)", true);
-  r('rlin2', "\\bigl[k\\cdot f(x)\\bigr]' = k\\cdot f'(x),\\qquad k\\in\\mathbb{R}", true);
-
-  /* Producto */
-  r('rprod1', "\\bigl[f(x)\\cdot g(x)\\bigr]' = f'(x)\\cdot g(x) + f(x)\\cdot g'(x)", true);
-  r('rprod2', "\\underbrace{f'(x)}_{\\text{1ra derivada}}\\cdot\\underbrace{g(x)}_{\\text{2da sin derivar}}\\;+\\;\\underbrace{f(x)}_{\\text{1ra sin derivar}}\\cdot\\underbrace{g'(x)}_{\\text{2da derivada}}", true);
-
-  /* Cociente */
-  r('rcoc1', "\\left[\\frac{f(x)}{g(x)}\\right]' = \\frac{f'(x)\\cdot g(x) - f(x)\\cdot g'(x)}{\\bigl[g(x)\\bigr]^2}", true);
-  r('rcoc2', "\\frac{\\overbrace{f'(x)}^{\\text{num. derivado}}\\cdot g(x)\\;-\\;f(x)\\cdot\\overbrace{g'(x)}^{\\text{den. derivado}}}{\\underbrace{[g(x)]^2}_{\\text{den. al cuadrado}}}", true);
-
-  /* Cadena */
-  r('rcad1', "\\bigl[f(g(x))\\bigr]' = f'(g(x))\\cdot g'(x)", true);
-  r('rcad2', "\\underbrace{f'(\\overbrace{g(x)}^{\\text{interior}})}_{\\text{exterior derivada, evaluada adentro}}\\cdot\\underbrace{g'(x)}_{\\text{interior derivada}}", true);
-  r('rcad3', "\\frac{dy}{dx} = \\frac{dy}{du}\\cdot\\frac{du}{dx}");
-}
-
-window.addEventListener('load', () => { initMath(); initRefuerzo(); });
 </script>
 </body>
 </html>
